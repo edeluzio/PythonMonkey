@@ -36,6 +36,8 @@ globalThis = pm.eval("globalThis;");
 pm.eval("globalThis.python = { pythonMonkey: {} }");
 globalThis.pmEval = pm.eval;
 globalThis.python.print = print;
+globalThis.python.stdout_write = sys.stdout.write;
+globalThis.python.stderr_write = sys.stderr.write;
 globalThis.python.getenv = os.getenv;
 globalThis.python.pythonMonkey.dir = os.path.dirname(__file__);
 globalThis.python.paths = ':'.join(sys.path);
@@ -208,10 +210,7 @@ def load(filename: str) -> Dict:
         spec.loader.exec_module(module)
     else:
         module = sys.modules[name]
-    module_exports = {}
-    for key in dir(module):
-        module_exports[key] = getattr(module, key)
-    return module_exports 
+    return module.exports
 globalThis.python.load = load
 
 """
